@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ROSSIA - Smart Cashier</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         :root {
             --bg-main: #f4f1ea;        
@@ -14,41 +13,121 @@
             --accent-red: #a83f39;     
             --line-color: #e5e5e5;     
             --gold-touch: #c5a059;     
-            --price-green: #2e7d32;    
+            --price-green: #2e7d32;
+            --bg-pattern-color: rgba(44, 44, 44, 0.05);
+            --text-color: #2c2c2c;
+            --item-bg: #fcfcfc;
+            --input-bg: transparent;
+            --shadow-color: rgba(0,0,0,0.06);
+            --floating-footer-bg: rgba(44, 44, 44, 0.95);
+            --floating-footer-text: white;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        [data-theme="dark"] {
+            --bg-main: #1a1a1a;        
+            --card-bg: #2d2d2d;        
+            --primary-dark: #ffffff;   
+            --accent-red: #ff5252;     
+            --line-color: #404040;     
+            --gold-touch: #d4af37;     
+            --price-green: #4caf50;
+            --bg-pattern-color: rgba(255, 255, 255, 0.03);
+            --text-color: #e0e0e0;
+            --item-bg: #363636;
+            --input-bg: #363636;
+            --shadow-color: rgba(0,0,0,0.4);
+            --floating-footer-bg: rgba(255, 255, 255, 0.1);
+            --floating-footer-text: #ffffff;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
 
         body {
             font-family: 'Cairo', sans-serif;
             background-color: var(--bg-main);
-            background-image: radial-gradient(#d7ccc8 1px, transparent 1px);
-            background-size: 20px 20px;
-            color: var(--primary-dark);
+            /* خلفية لوجو ROSSIA المتكررة */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='100' viewBox='0 0 200 100'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='serif' font-weight='900' font-size='30' fill='%232c2c2c' opacity='0.1'%3EROSSIA%3C/text%3E%3C/svg%3E");
+            background-size: 180px 90px;
+            background-position: center;
+            color: var(--text-color);
             margin: 0;
             padding: 20px 20px 120px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            overflow-x: hidden;
         }
+        
+        [data-theme="dark"] body {
+             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='100' viewBox='0 0 200 100'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='serif' font-weight='900' font-size='30' fill='%23ffffff' opacity='0.08'%3EROSSIA%3C/text%3E%3C/svg%3E");
+        }
+
+        /* زر تبديل الثيم */
+        .theme-switch-wrapper {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            z-index: 100;
+        }
+        .theme-switch {
+            display: inline-block;
+            height: 34px;
+            position: relative;
+            width: 60px;
+        }
+        .theme-switch input { display:none; }
+        .slider {
+            background-color: #ccc;
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            background-color: white;
+            bottom: 4px;
+            content: "";
+            height: 26px;
+            left: 4px;
+            position: absolute;
+            transition: .4s;
+            width: 26px;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--accent-red); }
+        input:checked + .slider:before { transform: translateX(26px); }
+        .slider .icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            transition: opacity 0.3s;
+        }
+        .slider .sun { left: 8px; opacity: 1; color: #f39c12; }
+        .slider .moon { right: 8px; opacity: 0; color: #f1c40f; }
+        input:checked + .slider .sun { opacity: 0; }
+        input:checked + .slider .moon { opacity: 1; }
 
         /* --- الهيدر واللوجو --- */
         .header-container { 
             margin-bottom: 25px; 
             text-align: center; 
-            margin-top: 20px;
+            margin-top: 40px;
             animation: fadeInDown 0.8s ease;
         }
-        
         .logo-wrapper { 
             display: flex; 
             align-items: center; 
             justify-content: center; 
             gap: 12px; 
-            position: relative;
         }
-
         .main-logo-text { 
             font-size: 55px; 
             font-weight: 900; 
@@ -56,9 +135,7 @@
             letter-spacing: -2px;
             line-height: 1;
         }
-        
         .logo-dot { color: var(--accent-red); }
-
         .logo-sub { 
             font-size: 14px; 
             font-weight: 600; 
@@ -67,7 +144,6 @@
             letter-spacing: 3px; 
             margin-top: 5px;
         }
-
         .cup-icon { width: 45px; height: 45px; fill: var(--primary-dark); }
 
         /* --- منطقة العمل --- */
@@ -85,13 +161,13 @@
             padding: 20px;
             margin-bottom: 20px;
             position: relative;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            border: 1px solid rgba(0,0,0,0.05);
-            transition: transform 0.2s;
+            box-shadow: 0 4px 20px var(--shadow-color);
+            border: 1px solid var(--line-color);
+            transition: transform 0.2s, box-shadow 0.3s;
             animation: slideIn 0.4s ease-out;
             border-top: 4px solid var(--accent-red);
         }
-        .person-card:hover { transform: translateY(-2px); }
+        .person-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px var(--shadow-color); }
 
         @keyframes slideIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
@@ -105,9 +181,10 @@
             color: var(--primary-dark); width: 100%; outline: none;
             font-family: 'Cairo', sans-serif;
         }
+        .name-input::placeholder { color: #999; }
         
         .delete-user-btn {
-            background: #fff0f0; border: none; color: var(--accent-red); 
+            background: rgba(255, 82, 82, 0.1); border: none; color: var(--accent-red); 
             cursor: pointer; font-size: 20px; width: 35px; height: 35px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; transition: 0.2s;
         }
@@ -115,20 +192,22 @@
 
         .item-row {
             display: flex; gap: 10px; align-items: center; margin-bottom: 10px;
-            background: #fcfcfc; padding: 5px; border-radius: 8px;
+            background: var(--item-bg); padding: 5px; border-radius: 8px; border: 1px solid var(--line-color);
         }
         .item-name {
-            flex: 2; border: 1px solid transparent; border-bottom: 1px solid #eee;
+            flex: 2; border: 1px solid transparent; border-bottom: 1px solid var(--line-color);
             padding: 8px; font-family: 'Cairo', sans-serif; font-size: 15px; outline: none;
-            background: transparent; color: #444; font-weight: 600;
+            background: var(--input-bg); color: var(--text-color); font-weight: 600; border-radius: 4px;
         }
+        .item-name::placeholder { color: #aaa; }
         .item-name:focus { border-bottom-color: var(--accent-red); }
         
         .item-price {
-            flex: 1; border: 1px solid transparent; border-bottom: 1px solid #eee;
+            flex: 1; border: 1px solid transparent; border-bottom: 1px solid var(--line-color);
             padding: 8px; font-family: 'Cairo', sans-serif; font-size: 16px; outline: none;
-            background: transparent; text-align: center; color: var(--price-green); font-weight: bold;
+            background: var(--input-bg); text-align: center; color: var(--price-green); font-weight: bold; border-radius: 4px;
         }
+        .item-price::placeholder { color: #aaa; }
         .item-price:focus { border-bottom-color: var(--price-green); }
 
         .btn-remove-item {
@@ -142,13 +221,13 @@
         }
         
         .btn-add-item {
-            background: var(--primary-dark); color: white; border: none; padding: 8px 18px;
+            background: var(--primary-dark); color: var(--card-bg); border: none; padding: 8px 18px;
             border-radius: 8px; font-size: 13px; cursor: pointer; font-family: 'Cairo';
-            transition: 0.2s;
+            transition: 0.2s; font-weight: 600;
         }
-        .btn-add-item:hover { background: var(--accent-red); }
+        .btn-add-item:hover { background: var(--accent-red); color: white; }
         
-        .user-total { font-size: 15px; font-weight: 700; color: #666; }
+        .user-total { font-size: 15px; font-weight: 700; color: #888; }
         .user-total span { color: var(--primary-dark); font-size: 20px; font-weight: 900; margin-right: 5px; }
 
         .main-actions { 
@@ -156,28 +235,36 @@
         }
         .btn-circle {
             width: 60px; height: 60px; border-radius: 20px; border: none; color: white;
-            font-size: 28px; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            font-size: 28px; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             display: flex; align-items: center; justify-content: center; transition: 0.3s;
         }
         .add-user-btn { background-color: var(--primary-dark); }
-        .camera-btn { background-color: var(--accent-red); font-size: 24px; }
-        .btn-circle:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.2); }
+        .btn-circle:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
 
         .floating-footer {
             position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
-            background: rgba(44, 44, 44, 0.95); color: white;
+            background: var(--floating-footer-bg); color: var(--floating-footer-text);
             padding: 15px 35px; border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             display: flex; align-items: center; gap: 20px;
             z-index: 100; min-width: 300px; justify-content: space-between;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.1);
         }
-        .total-amount { font-size: 28px; font-weight: 900; color: #fff; letter-spacing: 1px; }
-
+        .total-amount { font-size: 28px; font-weight: 900; color: inherit; letter-spacing: 1px; }
     </style>
 </head>
-<body>
+<body data-theme="light">
+
+    <div class="theme-switch-wrapper">
+       <label class="theme-switch" for="checkbox">
+        <input type="checkbox" id="checkbox" />
+        <div class="slider round">
+            <span class="icon sun">☀</span>
+            <span class="icon moon">☾</span>
+        </div>
+      </label>
+    </div>
 
     <div id="app-content" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
         
@@ -194,9 +281,8 @@
         <div class="notebook" id="capture-area">
             <div id="users-container"></div>
             
-            <div class="main-actions" data-html2canvas-ignore="true">
+            <div class="main-actions">
                 <button onclick="addNewUser()" class="btn-circle add-user-btn" title="شخص جديد">+</button>
-                <button onclick="takeScreenshot()" class="btn-circle camera-btn" title="حفظ الفاتورة">📸</button>
             </div>
         </div>
 
@@ -218,7 +304,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-analytics.js"></script>
 
     <script>
-        // إعدادات Firebase الجديدة الخاصة بمشروع rossia-eebc7
         const firebaseConfig = {
             apiKey: "AIzaSyBdONnA1oD-7urCeAK99l5i3WVGkit7OK8",
             authDomain: "rossia-eebc7.firebaseapp.com",
@@ -232,6 +317,29 @@
 
         let db;
         const popSound = new Audio("http://codeskulptor-demos.commondatastorage.googleapis.com/pang/pop.mp3");
+        
+        // Theme Switcher Logic
+        const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+        const currentTheme = localStorage.getItem('theme');
+
+        if (currentTheme) {
+            document.body.setAttribute('data-theme', currentTheme);
+            if (currentTheme === 'dark') {
+                toggleSwitch.checked = true;
+            }
+        }
+
+        function switchTheme(e) {
+            if (e.target.checked) {
+                document.body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            }    
+        }
+        toggleSwitch.addEventListener('change', switchTheme, false);
+
 
         window.onload = function() {
             initFirebase();
@@ -239,13 +347,9 @@
 
         function initFirebase() {
             if (!firebase.apps.length) {
-                // تهيئة التطبيق
-                const app = firebase.initializeApp(firebaseConfig);
+                firebase.initializeApp(firebaseConfig);
                 db = firebase.database();
-                // تفعيل التحليلات كما طلبت
                 firebase.analytics(); 
-
-                // الاتصال بقاعدة البيانات (مسار orders_v1)
                 db.ref('orders_v1').on('value', (snapshot) => {
                     const data = snapshot.val();
                     renderAll(data);
@@ -346,7 +450,6 @@
             animateValue("grand-total", parseInt(document.getElementById("grand-total").innerText), grandTotal, 500);
         }
 
-        // --- وظائف التفاعل مع قاعدة البيانات (تم تحديث المسار لـ orders_v1) ---
         function addNewUser() {
             db.ref('orders_v1').push().set({ name: "", items: {} });
         }
@@ -387,22 +490,6 @@
                 obj.innerText = current;
                 if (current == end) clearInterval(timer);
             }, Math.max(stepTime, 10));
-        }
-
-        function takeScreenshot() {
-            const btn = document.querySelector('.camera-btn');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = "⏳";
-            html2canvas(document.getElementById("capture-area"), {
-                scale: 3, backgroundColor: "#f4f1ea", useCORS: true
-            }).then(canvas => {
-                const link = document.createElement('a');
-                const date = new Date();
-                link.download = `Rossia-Order-${date.getHours()}-${date.getMinutes()}.png`;
-                link.href = canvas.toDataURL();
-                link.click();
-                btn.innerHTML = originalText;
-            });
         }
     </script>
 </body>
