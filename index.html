@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ROSSIA - Coffee System</title>
+    <title>ROSSIA - Smart System</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             /* --- الوضع النهاري --- */
             --bg-main: #fcf9f2;
-            --card-bg: rgba(255, 255, 255, 0.95); /* شفافية بسيطة للكروت عشان الخلفية تبان وراها */
+            --card-bg: rgba(255, 255, 255, 0.95);
             --text-primary: #3e2723;
             --text-secondary: #795548;
             --accent-color: #6d4c41;
@@ -20,8 +20,8 @@
             --card-border: 1px solid rgba(62, 39, 35, 0.1);
             --shadow: 0 4px 15px rgba(62, 39, 35, 0.08);
             
-            /* ألوان الخلفية (اللوجو اللي في النص) */
-            --watermark-color: %233e2723; /* بني */
+            /* ألوان الخلفية */
+            --watermark-color: %233e2723;
             --watermark-opacity: 0.08;
         }
 
@@ -39,8 +39,7 @@
             --card-border: 1px solid #333;
             --shadow: 0 4px 15px rgba(255, 255, 255, 0.05);
 
-            /* ألوان الخلفية في الليل */
-            --watermark-color: %23ffffff; /* أبيض */
+            --watermark-color: %23ffffff;
             --watermark-opacity: 0.1;
         }
 
@@ -56,20 +55,18 @@
             min-height: 100vh;
             overflow-x: hidden;
 
-            /* --- إعدادات الخلفية الجديدة (في المنتصف وغير مكررة) --- */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Cg fill='var(--watermark-color)' opacity='var(--watermark-opacity)'%3E%3C!-- ROSSIA Text --%3E%3Ctext x='200' y='200' font-family='serif' font-weight='900' font-size='60' text-anchor='middle' dominant-baseline='middle' transform='rotate(-10 200 200)'%3EROSSIA%3C/text%3E%3C!-- Coffee Cup Stain (Ring) --%3E%3Cpath d='M200 50 A 150 150 0 1 0 200 350 A 150 150 0 1 0 200 50 Z M 200 60 A 140 140 0 1 1 200 340 A 140 140 0 1 1 200 60 Z' fill-opacity='0.5'/%3E%3C!-- Coffee Beans Scattered --%3E%3Cpath d='M80 100 Q 100 80 120 100 T 160 100 Q 140 140 100 140 T 80 100' transform='rotate(30 120 120)'/%3E%3Cpath d='M300 280 Q 320 260 340 280 T 380 280 Q 360 320 320 320 T 300 280' transform='rotate(-15 340 300)'/%3E%3Cpath d='M50 300 Q 70 280 90 300 T 130 300 Q 110 340 70 340 T 50 300' transform='rotate(60 90 320)'/%3E%3C/g%3E%3C/svg%3E");
-            
+            /* الخلفية الثابتة في المنتصف */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Cg fill='var(--watermark-color)' opacity='var(--watermark-opacity)'%3E%3Ctext x='200' y='200' font-family='serif' font-weight='900' font-size='60' text-anchor='middle' dominant-baseline='middle' transform='rotate(-10 200 200)'%3EROSSIA%3C/text%3E%3Cpath d='M200 50 A 150 150 0 1 0 200 350 A 150 150 0 1 0 200 50 Z M 200 60 A 140 140 0 1 1 200 340 A 140 140 0 1 1 200 60 Z' fill-opacity='0.5'/%3E%3Cpath d='M80 100 Q 100 80 120 100 T 160 100 Q 140 140 100 140 T 80 100' transform='rotate(30 120 120)'/%3E%3Cpath d='M300 280 Q 320 260 340 280 T 380 280 Q 360 320 320 320 T 300 280' transform='rotate(-15 340 300)'/%3E%3C/g%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: center center; /* في منتصف الصفحة */
-            background-attachment: fixed;       /* ثابتة أثناء النزول والطلوع */
-            background-size: 500px auto;        /* حجم مناسب */
+            background-position: center center;
+            background-attachment: fixed;
+            background-size: 500px auto;
         }
 
-        /* تعديل ألوان الـ SVG المتغيرة حسب الثيم */
         [data-theme="light"] body { --watermark-color: %233e2723; }
         [data-theme="dark"] body { --watermark-color: %23ffffff; }
 
-        /* --- زرار التحويل (شمس وقمر) --- */
+        /* --- زرار التحويل --- */
         .theme-switch-wrapper { position: absolute; top: 20px; left: 20px; z-index: 100; }
         .theme-switch { display: inline-block; height: 30px; position: relative; width: 55px; }
         .theme-switch input { display:none; }
@@ -93,45 +90,47 @@
         .notebook { width: 100%; max-width: 600px; position: relative; z-index: 2; }
         .person-card {
             background: var(--card-bg); border: var(--card-border);
-            border-radius: 12px; padding: 20px; margin-bottom: 20px;
+            border-radius: 12px; padding: 15px; margin-bottom: 20px;
             box-shadow: var(--shadow); position: relative;
-            backdrop-filter: blur(2px); /* تأثير ضبابي خفيف عشان الخلفية */
+            backdrop-filter: blur(2px);
             animation: slideUp 0.4s ease-out;
         }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line-color); padding-bottom: 15px; margin-bottom: 15px; }
-        .name-input { border: none; background: transparent; font-size: 20px; font-weight: 800; color: var(--text-primary); width: 100%; outline: none; font-family: 'Cairo'; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line-color); padding-bottom: 10px; margin-bottom: 10px; }
+        .name-input { border: none; background: transparent; font-size: 18px; font-weight: 800; color: var(--text-primary); width: 100%; outline: none; font-family: 'Cairo'; }
         .name-input::placeholder { color: var(--text-secondary); opacity: 0.5; }
-        .delete-btn { background: none; border: 1px solid var(--line-color); color: var(--text-secondary); width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .delete-btn { background: none; border: 1px solid var(--line-color); color: var(--text-secondary); width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; }
         .delete-btn:hover { background: #ff5252; color: #fff; border-color: #ff5252; }
 
-        /* --- الطلبات --- */
-        .item-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        /* --- تصميم صف الطلب (معدل للعداد) --- */
+        .item-row { display: flex; gap: 5px; margin-bottom: 8px; align-items: center; }
         .item-input {
             border: 1px solid var(--line-color); background: var(--input-bg);
-            color: var(--text-primary); padding: 10px; border-radius: 8px;
-            font-family: 'Cairo'; font-size: 14px; outline: none; font-weight: 600;
+            color: var(--text-primary); padding: 8px; border-radius: 6px;
+            font-family: 'Cairo'; font-size: 14px; outline: none; font-weight: 600; text-align: center;
         }
-        .item-input::placeholder { color: var(--text-secondary); opacity: 0.6; }
+        .item-input::placeholder { color: var(--text-secondary); opacity: 0.4; font-size: 12px; }
         .item-input:focus { border-color: var(--accent-color); }
+
+        /* تقسيم العواميد */
+        .i-qty { width: 15%; font-weight: 800; } /* خانة العدد */
+        .i-name { width: 45%; text-align: right; padding-right: 10px; } /* الاسم */
+        .i-price { width: 20%; } /* سعر القطعة */
+        .i-total { width: 15%; font-size: 14px; font-weight: 900; color: var(--price-color); text-align: center; } /* المجموع */
         
-        .i-name { flex: 2; }
-        .i-price { flex: 1; text-align: center; color: var(--price-color); }
-        .i-remove { background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 18px; opacity: 0.5; }
+        .i-remove { background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 18px; opacity: 0.5; width: 5%; }
         .i-remove:hover { color: #ff5252; opacity: 1; }
 
         .card-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 10px; border-top: 1px dashed var(--line-color); }
         .add-item-btn {
             background: var(--text-primary); color: var(--bg-main); border: none;
-            padding: 8px 20px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; font-family: 'Cairo';
+            padding: 8px 20px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; font-family: 'Cairo';
         }
-        .add-item-btn:hover { opacity: 0.9; }
         .card-total { font-size: 14px; color: var(--text-secondary); font-weight: 700; }
         .card-total span { color: var(--text-primary); font-size: 18px; font-weight: 900; }
 
-        /* --- الزر العائم --- */
         .main-fab {
             position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
             width: 65px; height: 65px; background: var(--text-primary); color: var(--bg-main);
@@ -141,7 +140,6 @@
         }
         .main-fab:hover { transform: translateX(-50%) scale(1.1); }
 
-        /* --- الفوتر --- */
         .total-bar {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             background: var(--text-primary); color: var(--bg-main);
@@ -231,7 +229,8 @@
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
                 db = firebase.database();
-                db.ref('orders_v1').on('value', renderAll);
+                // تم التعديل إلى orders_v2 عشان نبدأ نظيف بالهيكلة الجديدة
+                db.ref('orders_v2').on('value', renderAll);
             }
         };
 
@@ -251,8 +250,16 @@
             Object.keys(data).forEach(userId => {
                 existingIds.add(`card-${userId}`);
                 const user = data[userId];
+                
+                // حساب إجمالي الكارت بناء على الكمية * السعر
                 let userTotal = 0;
-                if(user.items) Object.values(user.items).forEach(i => userTotal += Number(i.price) || 0);
+                if(user.items) {
+                    Object.values(user.items).forEach(i => {
+                        const qty = Number(i.qty) || 1;
+                        const price = Number(i.price) || 0;
+                        userTotal += (qty * price);
+                    });
+                }
                 grandTotal += userTotal;
 
                 let card = document.getElementById(`card-${userId}`);
@@ -278,8 +285,10 @@
                 const nameInp = document.getElementById(`name-${userId}`);
                 if(document.activeElement !== nameInp) nameInp.value = user.name || "";
                 
+                // تحديث رقم الإجمالي في الكارت
                 card.querySelector('.card-total span').innerText = userTotal;
 
+                // معالجة الصفوف
                 const itemsContainer = document.getElementById(`items-${userId}`);
                 const itemsData = user.items || {};
                 const currentItemIds = new Set();
@@ -287,22 +296,36 @@
                 Object.keys(itemsData).forEach(itemId => {
                     currentItemIds.add(`item-${itemId}`);
                     const item = itemsData[itemId];
+                    const qtyVal = item.qty || 1;
+                    const priceVal = item.price || "";
+                    const lineTotal = (Number(qtyVal) * Number(priceVal)) || 0;
+
                     let row = document.getElementById(`item-${itemId}`);
                     if(!row) {
                         row = document.createElement('div');
                         row.id = `item-${itemId}`;
                         row.className = 'item-row';
                         row.innerHTML = `
+                            <input type="number" class="item-input i-qty" id="q-${itemId}" value="${qtyVal}" oninput="updItem('${userId}','${itemId}')">
                             <input class="item-input i-name" id="n-${itemId}" placeholder="الطلب" oninput="updItem('${userId}','${itemId}')">
-                            <input type="number" class="item-input i-price" id="p-${itemId}" placeholder="0" oninput="updItem('${userId}','${itemId}')">
+                            <input type="number" class="item-input i-price" id="p-${itemId}" placeholder="سعر" oninput="updItem('${userId}','${itemId}')">
+                            <div class="i-total" id="t-${itemId}">${lineTotal}</div>
                             <button class="i-remove" onclick="delItem('${userId}','${itemId}')">×</button>
                         `;
                         itemsContainer.appendChild(row);
                     }
+                    
+                    const qInp = document.getElementById(`q-${itemId}`);
                     const nInp = document.getElementById(`n-${itemId}`);
                     const pInp = document.getElementById(`p-${itemId}`);
+                    const tDiv = document.getElementById(`t-${itemId}`);
+
+                    if(document.activeElement !== qInp) qInp.value = qtyVal;
                     if(document.activeElement !== nInp) nInp.value = item.text || "";
-                    if(document.activeElement !== pInp) pInp.value = item.price || "";
+                    if(document.activeElement !== pInp) pInp.value = priceVal;
+                    
+                    // تحديث المجموع الفرعي فورياً
+                    tDiv.innerText = lineTotal;
                 });
 
                 Array.from(itemsContainer.children).forEach(child => {
@@ -319,15 +342,26 @@
             if(currentDisplay !== grandTotal) totalEl.innerText = grandTotal;
         }
 
-        const updName = (uid, val) => db.ref(`orders_v1/${uid}`).update({name: val});
-        const addNewUser = () => db.ref('orders_v1').push().set({name:"", items:{}});
-        const delUser = (uid) => confirm("حذف؟") ? db.ref(`orders_v1/${uid}`).remove() : null;
-        const addItem = (uid) => db.ref(`orders_v1/${uid}/items`).push().set({text:"", price:""});
-        const delItem = (uid, iid) => db.ref(`orders_v1/${uid}/items/${iid}`).remove();
+        // Firebase Functions (Updated for orders_v2)
+        const updName = (uid, val) => db.ref(`orders_v2/${uid}`).update({name: val});
+        const addNewUser = () => db.ref('orders_v2').push().set({name:"", items:{}});
+        const delUser = (uid) => confirm("حذف؟") ? db.ref(`orders_v2/${uid}`).remove() : null;
+        
+        // إضافة طلب جديد (العدد الافتراضي 1)
+        const addItem = (uid) => db.ref(`orders_v2/${uid}/items`).push().set({qty:1, text:"", price:""});
+        
+        const delItem = (uid, iid) => db.ref(`orders_v2/${uid}/items/${iid}`).remove();
+        
+        // تحديث البيانات (العدد - الاسم - السعر)
         const updItem = (uid, iid) => {
-            db.ref(`orders_v1/${uid}/items/${iid}`).update({
-                text: document.getElementById(`n-${iid}`).value,
-                price: Number(document.getElementById(`p-${iid}`).value)
+            const qty = document.getElementById(`q-${iid}`).value;
+            const text = document.getElementById(`n-${iid}`).value;
+            const price = document.getElementById(`p-${iid}`).value;
+            
+            db.ref(`orders_v2/${uid}/items/${iid}`).update({
+                qty: Number(qty),
+                text: text,
+                price: Number(price)
             });
         };
     </script>
