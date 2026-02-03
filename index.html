@@ -7,41 +7,41 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* --- الوضع النهاري (ألوان القهوة والكراميل) --- */
-            --bg-main: #fcf9f2;         /* كريمي فاتح */
-            --card-bg: #ffffff;
-            --text-primary: #3e2723;    /* بني غامق جداً (لون البن) */
-            --text-secondary: #795548;  /* بني فاتح */
-            --accent-color: #6d4c41;    /* بني متوسط */
-            --price-color: #2e7d32;     /* أخضر للاسعار */
-            --line-color: #ece0d1;      /* فواصل بيج */
+            /* --- الوضع النهاري --- */
+            --bg-main: #fcf9f2;
+            --card-bg: rgba(255, 255, 255, 0.95); /* شفافية بسيطة للكروت عشان الخلفية تبان وراها */
+            --text-primary: #3e2723;
+            --text-secondary: #795548;
+            --accent-color: #6d4c41;
+            --price-color: #2e7d32;
+            --line-color: #ece0d1;
             --input-bg: #fffbf7;
-            --logo-color: #3e2723;      /* لون حباية البن */
+            --logo-color: #3e2723;
             --card-border: 1px solid rgba(62, 39, 35, 0.1);
             --shadow: 0 4px 15px rgba(62, 39, 35, 0.08);
             
-            /* خلفية باترن النهار (بني خفيف جداً) */
-            --pattern-opacity: 0.06;
-            --pattern-color: %233e2723; /* كود اللون البني للـ SVG */
+            /* ألوان الخلفية (اللوجو اللي في النص) */
+            --watermark-color: %233e2723; /* بني */
+            --watermark-opacity: 0.08;
         }
 
         [data-theme="dark"] {
-            /* --- الوضع الليلي (أبيض وأسود وبني فخم) --- */
-            --bg-main: #000000;         /* أسود صريح */
-            --card-bg: #121212;         /* أسود رمادي للكروت */
-            --text-primary: #ffffff;    /* أبيض ناصع */
-            --text-secondary: #bcaaa4;  /* بني رمادي فاتح */
-            --accent-color: #d7ccc8;    /* أوف وايت */
-            --price-color: #81c784;     /* أخضر فاتح */
-            --line-color: #333333;      /* فواصل غامقة */
+            /* --- الوضع الليلي --- */
+            --bg-main: #000000;
+            --card-bg: rgba(18, 18, 18, 0.95);
+            --text-primary: #ffffff;
+            --text-secondary: #bcaaa4;
+            --accent-color: #d7ccc8;
+            --price-color: #81c784;
+            --line-color: #333333;
             --input-bg: #1e1e1e;
-            --logo-color: #ffffff;      /* اللوجو أبيض في الليل */
+            --logo-color: #ffffff;
             --card-border: 1px solid #333;
             --shadow: 0 4px 15px rgba(255, 255, 255, 0.05);
 
-            /* خلفية باترن الليل (أبيض خفيف) */
-            --pattern-opacity: 0.08;
-            --pattern-color: %23ffffff; /* كود اللون الأبيض للـ SVG */
+            /* ألوان الخلفية في الليل */
+            --watermark-color: %23ffffff; /* أبيض */
+            --watermark-opacity: 0.1;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: background-color 0.3s, color 0.3s, border-color 0.3s, fill 0.3s; }
@@ -56,13 +56,18 @@
             min-height: 100vh;
             overflow-x: hidden;
 
-            /* --- الخلفية الجامدة (ROSSIA + حبوب بن + آثار كوباية) --- */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Cg fill='var(--pattern-color)' opacity='var(--pattern-opacity)'%3E%3C!-- Brand Name --%3E%3Ctext x='150' y='150' font-family='serif' font-weight='900' font-size='40' text-anchor='middle' transform='rotate(-15 150 150)'%3EROSSIA%3C/text%3E%3C!-- Coffee Ring Stain --%3E%3Cpath d='M250 50 A 40 40 0 1 0 250 130 A 40 40 0 1 0 250 50 Z M 250 55 A 35 35 0 1 1 250 125 A 35 35 0 1 1 250 55 Z' fill-opacity='0.5'/%3E%3C!-- Coffee Bean 1 --%3E%3Cpath d='M50 200 Q 70 180 90 200 T 130 200 Q 110 240 70 240 T 50 200 M 70 205 Q 90 195 110 205' stroke='var(--pattern-color)' stroke-width='2' fill='none' transform='rotate(30 90 220)'/%3E%3C!-- Coffee Bean 2 (Small) --%3E%3Cpath d='M200 250 Q 210 240 220 250 T 240 250 Q 230 270 210 270 T 200 250' stroke='var(--pattern-color)' stroke-width='2' fill='none' transform='rotate(-45 220 260)'/%3E%3C/g%3E%3C/svg%3E");
+            /* --- إعدادات الخلفية الجديدة (في المنتصف وغير مكررة) --- */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Cg fill='var(--watermark-color)' opacity='var(--watermark-opacity)'%3E%3C!-- ROSSIA Text --%3E%3Ctext x='200' y='200' font-family='serif' font-weight='900' font-size='60' text-anchor='middle' dominant-baseline='middle' transform='rotate(-10 200 200)'%3EROSSIA%3C/text%3E%3C!-- Coffee Cup Stain (Ring) --%3E%3Cpath d='M200 50 A 150 150 0 1 0 200 350 A 150 150 0 1 0 200 50 Z M 200 60 A 140 140 0 1 1 200 340 A 140 140 0 1 1 200 60 Z' fill-opacity='0.5'/%3E%3C!-- Coffee Beans Scattered --%3E%3Cpath d='M80 100 Q 100 80 120 100 T 160 100 Q 140 140 100 140 T 80 100' transform='rotate(30 120 120)'/%3E%3Cpath d='M300 280 Q 320 260 340 280 T 380 280 Q 360 320 320 320 T 300 280' transform='rotate(-15 340 300)'/%3E%3Cpath d='M50 300 Q 70 280 90 300 T 130 300 Q 110 340 70 340 T 50 300' transform='rotate(60 90 320)'/%3E%3C/g%3E%3C/svg%3E");
+            
+            background-repeat: no-repeat;
+            background-position: center center; /* في منتصف الصفحة */
+            background-attachment: fixed;       /* ثابتة أثناء النزول والطلوع */
+            background-size: 500px auto;        /* حجم مناسب */
         }
 
-        /* تعديل الألوان داخل الـ SVG عبر الـ CSS مباشرة */
-        [data-theme="light"] body { --pattern-color: %233e2723; }
-        [data-theme="dark"] body { --pattern-color: %23ffffff; }
+        /* تعديل ألوان الـ SVG المتغيرة حسب الثيم */
+        [data-theme="light"] body { --watermark-color: %233e2723; }
+        [data-theme="dark"] body { --watermark-color: %23ffffff; }
 
         /* --- زرار التحويل (شمس وقمر) --- */
         .theme-switch-wrapper { position: absolute; top: 20px; left: 20px; z-index: 100; }
@@ -78,19 +83,19 @@
         input:checked + .slider .moon { opacity: 1; }
 
         /* --- الهيدر --- */
-        .header-container { margin-top: 40px; margin-bottom: 30px; text-align: center; animation: fadeIn 1s ease; }
+        .header-container { margin-top: 40px; margin-bottom: 30px; text-align: center; animation: fadeIn 1s ease; position: relative; z-index: 2; }
         .logo-wrapper { display: flex; align-items: center; justify-content: center; gap: 10px; }
         .main-logo-text { font-size: 50px; font-weight: 900; color: var(--text-primary); letter-spacing: -1px; text-transform: uppercase; }
-        .logo-dot { color: var(--accent-color); font-size: 60px; line-height: 0; }
         .cup-icon { width: 45px; height: 45px; fill: var(--logo-color); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
         .logo-sub { font-size: 13px; font-weight: 700; color: var(--text-secondary); letter-spacing: 4px; margin-top: 5px; }
 
         /* --- الكروت --- */
-        .notebook { width: 100%; max-width: 600px; position: relative; }
+        .notebook { width: 100%; max-width: 600px; position: relative; z-index: 2; }
         .person-card {
             background: var(--card-bg); border: var(--card-border);
             border-radius: 12px; padding: 20px; margin-bottom: 20px;
             box-shadow: var(--shadow); position: relative;
+            backdrop-filter: blur(2px); /* تأثير ضبابي خفيف عشان الخلفية */
             animation: slideUp 0.4s ease-out;
         }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -210,7 +215,6 @@
 
         let db;
         
-        // Theme Logic
         const toggleSwitch = document.getElementById('themeCheckbox');
         const currentTheme = localStorage.getItem('theme');
         if (currentTheme) {
@@ -242,7 +246,6 @@
                 return;
             }
 
-            // Keep existing elements to prevent redraw flicker (simple reconcilation)
             const existingIds = new Set();
             
             Object.keys(data).forEach(userId => {
@@ -269,18 +272,14 @@
                         </div>
                     `;
                     container.appendChild(card);
-                    // Remove placeholder if exists
                     if(container.querySelector('p')) container.querySelector('p').remove();
                 }
 
-                // Update Name
                 const nameInp = document.getElementById(`name-${userId}`);
                 if(document.activeElement !== nameInp) nameInp.value = user.name || "";
                 
-                // Update Total Text
                 card.querySelector('.card-total span').innerText = userTotal;
 
-                // Handle Items
                 const itemsContainer = document.getElementById(`items-${userId}`);
                 const itemsData = user.items || {};
                 const currentItemIds = new Set();
@@ -306,24 +305,20 @@
                     if(document.activeElement !== pInp) pInp.value = item.price || "";
                 });
 
-                // Clean deleted items
                 Array.from(itemsContainer.children).forEach(child => {
                     if(!currentItemIds.has(child.id)) child.remove();
                 });
             });
 
-            // Clean deleted users
             Array.from(container.children).forEach(child => {
                 if(child.className === 'person-card' && !existingIds.has(child.id)) child.remove();
             });
 
-            // Animate Total
             const totalEl = document.getElementById("grand-total");
             const currentDisplay = parseInt(totalEl.innerText);
             if(currentDisplay !== grandTotal) totalEl.innerText = grandTotal;
         }
 
-        // Firebase Functions
         const updName = (uid, val) => db.ref(`orders_v1/${uid}`).update({name: val});
         const addNewUser = () => db.ref('orders_v1').push().set({name:"", items:{}});
         const delUser = (uid) => confirm("حذف؟") ? db.ref(`orders_v1/${uid}`).remove() : null;
