@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ROSSIA - Smart System</title>
+    <title>ROSSIA - Smart Menu</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -16,11 +16,6 @@
             --price-color: #2e7d32;
             --line-color: #ece0d1;
             --input-bg: #fffbf7;
-            --logo-color: #3e2723;
-            --card-border: 1px solid rgba(62, 39, 35, 0.1);
-            --shadow: 0 4px 15px rgba(62, 39, 35, 0.08);
-            
-            /* ألوان الخلفية */
             --watermark-color: %233e2723;
             --watermark-opacity: 0.08;
         }
@@ -35,15 +30,11 @@
             --price-color: #81c784;
             --line-color: #333333;
             --input-bg: #1e1e1e;
-            --logo-color: #ffffff;
-            --card-border: 1px solid #333;
-            --shadow: 0 4px 15px rgba(255, 255, 255, 0.05);
-
             --watermark-color: %23ffffff;
             --watermark-opacity: 0.1;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: background-color 0.3s, color 0.3s, border-color 0.3s, fill 0.3s; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
 
         body {
             font-family: 'Cairo', sans-serif;
@@ -54,15 +45,13 @@
             display: flex; flex-direction: column; align-items: center;
             min-height: 100vh;
             overflow-x: hidden;
-
-            /* الخلفية الثابتة في المنتصف */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Cg fill='var(--watermark-color)' opacity='var(--watermark-opacity)'%3E%3Ctext x='200' y='200' font-family='serif' font-weight='900' font-size='60' text-anchor='middle' dominant-baseline='middle' transform='rotate(-10 200 200)'%3EROSSIA%3C/text%3E%3Cpath d='M200 50 A 150 150 0 1 0 200 350 A 150 150 0 1 0 200 50 Z M 200 60 A 140 140 0 1 1 200 340 A 140 140 0 1 1 200 60 Z' fill-opacity='0.5'/%3E%3Cpath d='M80 100 Q 100 80 120 100 T 160 100 Q 140 140 100 140 T 80 100' transform='rotate(30 120 120)'/%3E%3Cpath d='M300 280 Q 320 260 340 280 T 380 280 Q 360 320 320 320 T 300 280' transform='rotate(-15 340 300)'/%3E%3C/g%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Cg fill='var(--watermark-color)' opacity='var(--watermark-opacity)'%3E%3Ctext x='200' y='200' font-family='serif' font-weight='900' font-size='60' text-anchor='middle' dominant-baseline='middle' transform='rotate(-10 200 200)'%3EROSSIA%3C/text%3E%3Cpath d='M200 50 A 150 150 0 1 0 200 350 A 150 150 0 1 0 200 50 Z M 200 60 A 140 140 0 1 1 200 340 A 140 140 0 1 1 200 60 Z' fill-opacity='0.5'/%3E%3C/g%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: center center;
             background-attachment: fixed;
             background-size: 500px auto;
         }
-
+        
         [data-theme="light"] body { --watermark-color: %233e2723; }
         [data-theme="dark"] body { --watermark-color: %23ffffff; }
 
@@ -83,16 +72,16 @@
         .header-container { margin-top: 40px; margin-bottom: 30px; text-align: center; animation: fadeIn 1s ease; position: relative; z-index: 2; }
         .logo-wrapper { display: flex; align-items: center; justify-content: center; gap: 10px; }
         .main-logo-text { font-size: 50px; font-weight: 900; color: var(--text-primary); letter-spacing: -1px; text-transform: uppercase; }
-        .cup-icon { width: 45px; height: 45px; fill: var(--logo-color); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+        .cup-icon { width: 45px; height: 45px; fill: var(--text-primary); }
         .logo-sub { font-size: 13px; font-weight: 700; color: var(--text-secondary); letter-spacing: 4px; margin-top: 5px; }
 
         /* --- الكروت --- */
         .notebook { width: 100%; max-width: 600px; position: relative; z-index: 2; }
         .person-card {
-            background: var(--card-bg); border: var(--card-border);
+            background: var(--card-bg); border: 1px solid var(--line-color);
             border-radius: 12px; padding: 15px; margin-bottom: 20px;
-            box-shadow: var(--shadow); position: relative;
-            backdrop-filter: blur(2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: relative;
+            backdrop-filter: blur(5px);
             animation: slideUp 0.4s ease-out;
         }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -100,28 +89,36 @@
 
         .card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line-color); padding-bottom: 10px; margin-bottom: 10px; }
         .name-input { border: none; background: transparent; font-size: 18px; font-weight: 800; color: var(--text-primary); width: 100%; outline: none; font-family: 'Cairo'; }
-        .name-input::placeholder { color: var(--text-secondary); opacity: 0.5; }
         .delete-btn { background: none; border: 1px solid var(--line-color); color: var(--text-secondary); width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; }
         .delete-btn:hover { background: #ff5252; color: #fff; border-color: #ff5252; }
 
-        /* --- تصميم صف الطلب (معدل للعداد) --- */
+        /* --- صفوف الطلبات --- */
         .item-row { display: flex; gap: 5px; margin-bottom: 8px; align-items: center; }
+        
+        /* تصميم الحقول */
         .item-input {
             border: 1px solid var(--line-color); background: var(--input-bg);
             color: var(--text-primary); padding: 8px; border-radius: 6px;
             font-family: 'Cairo'; font-size: 14px; outline: none; font-weight: 600; text-align: center;
         }
-        .item-input::placeholder { color: var(--text-secondary); opacity: 0.4; font-size: 12px; }
-        .item-input:focus { border-color: var(--accent-color); }
-
-        /* تقسيم العواميد */
-        .i-qty { width: 15%; font-weight: 800; } /* خانة العدد */
-        .i-name { width: 45%; text-align: right; padding-right: 10px; } /* الاسم */
-        .i-price { width: 20%; } /* سعر القطعة */
-        .i-total { width: 15%; font-size: 14px; font-weight: 900; color: var(--price-color); text-align: center; } /* المجموع */
         
-        .i-remove { background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 18px; opacity: 0.5; width: 5%; }
-        .i-remove:hover { color: #ff5252; opacity: 1; }
+        /* القائمة المنسدلة */
+        select.item-input {
+            appearance: none; -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236d4c41%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: left 0.7rem top 50%;
+            background-size: 0.65rem auto;
+            padding-left: 20px;
+        }
+
+        .i-qty { width: 15%; font-weight: 800; }
+        .i-name { width: 45%; text-align: right; padding-right: 10px; cursor: pointer; }
+        .i-price { width: 20%; background: rgba(0,0,0,0.03); } /* لون مختلف لأنه أوتوماتيك */
+        .i-total { width: 15%; font-size: 14px; font-weight: 900; color: var(--price-color); text-align: center; }
+        
+        .i-remove { background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 18px; width: 5%; }
+        .i-remove:hover { color: #ff5252; }
 
         .card-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 10px; border-top: 1px dashed var(--line-color); }
         .add-item-btn {
@@ -131,14 +128,21 @@
         .card-total { font-size: 14px; color: var(--text-secondary); font-weight: 700; }
         .card-total span { color: var(--text-primary); font-size: 18px; font-weight: 900; }
 
-        .main-fab {
+        /* --- الأزرار العائمة --- */
+        .fab-container {
             position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
-            width: 65px; height: 65px; background: var(--text-primary); color: var(--bg-main);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 35px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); cursor: pointer;
-            border: 2px solid var(--bg-main); z-index: 90; transition: transform 0.2s;
+            display: flex; gap: 20px; z-index: 90;
         }
-        .main-fab:hover { transform: translateX(-50%) scale(1.1); }
+        .main-fab {
+            width: 60px; height: 60px; background: var(--text-primary); color: var(--bg-main);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); cursor: pointer;
+            border: 2px solid var(--bg-main); transition: transform 0.2s;
+        }
+        .main-fab:hover { transform: scale(1.1); }
+        
+        /* زرار التقرير */
+        .report-fab { background: var(--accent-color); font-size: 24px; }
 
         .total-bar {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
@@ -147,9 +151,7 @@
             display: flex; justify-content: space-between; align-items: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 100;
         }
-        .total-label { font-size: 12px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px; }
         .total-val { font-size: 24px; font-weight: 900; }
-        .currency { font-size: 12px; color: var(--accent-color); font-weight: bold; }
 
     </style>
 </head>
@@ -169,28 +171,29 @@
         
         <div class="header-container">
             <div class="logo-wrapper">
-                <svg class="cup-icon" viewBox="0 0 24 24">
-                    <path d="M18.5 3H6c-1.1 0-2 .9-2 2v5.71c0 3.83 2.95 7.18 6.78 7.29 3.96.12 7.22-3.06 7.22-7v-1h.5c1.93 0 3.5-1.57 3.5-3.5S20.43 3 18.5 3zM16 8.99c0 2.8-2.2 5.02-5 5.02s-5-2.21-5-5.02V5h10v3.99zM18.5 8h-.5V5h.5c.83 0 1.5.67 1.5 1.5S19.33 8 18.5 8z" />
-                </svg>
+                <svg class="cup-icon" viewBox="0 0 24 24"><path d="M18.5 3H6c-1.1 0-2 .9-2 2v5.71c0 3.83 2.95 7.18 6.78 7.29 3.96.12 7.22-3.06 7.22-7v-1h.5c1.93 0 3.5-1.57 3.5-3.5S20.43 3 18.5 3zM16 8.99c0 2.8-2.2 5.02-5 5.02s-5-2.21-5-5.02V5h10v3.99zM18.5 8h-.5V5h.5c.83 0 1.5.67 1.5 1.5S19.33 8 18.5 8z" /></svg>
                 <div class="main-logo-text">ROSSIA</div>
             </div>
-            <div class="logo-sub">PREMIUM COFFEE</div>
+            <div class="logo-sub">SMART MENU SYSTEM</div>
         </div>
 
         <div class="notebook">
             <div id="users-container"></div>
         </div>
 
-        <button onclick="addNewUser()" class="main-fab" title="عميل جديد">+</button>
+        <div class="fab-container">
+            <button onclick="showReport()" class="main-fab report-fab" title="جرد المبيعات">📊</button>
+            <button onclick="addNewUser()" class="main-fab" title="عميل جديد">+</button>
+        </div>
 
         <div class="total-bar">
             <div>
-                <div class="total-label">Grand Total</div>
+                <div style="font-size:12px; opacity:0.8;">Grand Total</div>
                 <div style="font-size:10px;">الإجمالي الكلي</div>
             </div>
             <div style="display:flex; align-items:baseline; gap:5px;">
                 <span id="grand-total" class="total-val">0</span>
-                <span class="currency">EGP</span>
+                <span style="font-size:12px; color:var(--accent-color);">EGP</span>
             </div>
         </div>
 
@@ -200,6 +203,23 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
+        // ==========================================
+        // 🛠️ إعدادات المنيو (عدل هنا الأسعار والأسماء)
+        // ==========================================
+        const MENU_ITEMS = [
+            { name: "قهوة تركي", price: 20 },
+            { name: "قهوة فرنساوي", price: 30 },
+            { name: "إسبريسو", price: 30 },
+            { name: "شاي", price: 10 },
+              { name: " كوفي ميكس باللبن", price: 30 },
+            { name: "كوفي ميكس", price: 20 },
+            { name: "كولا", price: 20 },
+            { name: "مياه معدنية", price: 10 },
+            { name: " عصير بيتي", price: 15 },
+             { name: "عصير فواكه", price: 25 },
+             { name: "كوكتيل", price: 35 }
+        ]
+
         const firebaseConfig = {
             apiKey: "AIzaSyBdONnA1oD-7urCeAK99l5i3WVGkit7OK8",
             authDomain: "rossia-eebc7.firebaseapp.com",
@@ -212,7 +232,9 @@
         };
 
         let db;
-        
+        let globalData = {}; // لحفظ البيانات عشان التقرير
+
+        // Theme Setup
         const toggleSwitch = document.getElementById('themeCheckbox');
         const currentTheme = localStorage.getItem('theme');
         if (currentTheme) {
@@ -229,17 +251,17 @@
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
                 db = firebase.database();
-                // تم التعديل إلى orders_v2 عشان نبدأ نظيف بالهيكلة الجديدة
-                db.ref('orders_v2').on('value', renderAll);
+                // استخدمنا orders_v3 للإصدار الجديد
+                db.ref('orders_v3').on('value', renderAll);
             }
         };
 
         function renderAll(snapshot) {
-            const data = snapshot.val();
+            globalData = snapshot.val() || {}; // تحديث البيانات العالمية
             const container = document.getElementById('users-container');
             let grandTotal = 0;
 
-            if (!data) {
+            if (!globalData || Object.keys(globalData).length === 0) {
                 container.innerHTML = "<p style='text-align:center; opacity:0.5; margin-top:50px;'>القائمة فارغة</p>";
                 document.getElementById('grand-total').innerText = "0";
                 return;
@@ -247,17 +269,14 @@
 
             const existingIds = new Set();
             
-            Object.keys(data).forEach(userId => {
+            Object.keys(globalData).forEach(userId => {
                 existingIds.add(`card-${userId}`);
-                const user = data[userId];
+                const user = globalData[userId];
                 
-                // حساب إجمالي الكارت بناء على الكمية * السعر
                 let userTotal = 0;
                 if(user.items) {
                     Object.values(user.items).forEach(i => {
-                        const qty = Number(i.qty) || 1;
-                        const price = Number(i.price) || 0;
-                        userTotal += (qty * price);
+                        userTotal += (Number(i.qty||1) * Number(i.price||0));
                     });
                 }
                 grandTotal += userTotal;
@@ -285,7 +304,6 @@
                 const nameInp = document.getElementById(`name-${userId}`);
                 if(document.activeElement !== nameInp) nameInp.value = user.name || "";
                 
-                // تحديث رقم الإجمالي في الكارت
                 card.querySelector('.card-total span').innerText = userTotal;
 
                 // معالجة الصفوف
@@ -297,34 +315,47 @@
                     currentItemIds.add(`item-${itemId}`);
                     const item = itemsData[itemId];
                     const qtyVal = item.qty || 1;
-                    const priceVal = item.price || "";
-                    const lineTotal = (Number(qtyVal) * Number(priceVal)) || 0;
+                    const priceVal = item.price || 0;
+                    const lineTotal = qtyVal * priceVal;
 
                     let row = document.getElementById(`item-${itemId}`);
                     if(!row) {
                         row = document.createElement('div');
                         row.id = `item-${itemId}`;
                         row.className = 'item-row';
+                        
+                        // إنشاء خيارات القائمة
+                        let options = `<option value="" disabled ${!item.text ? 'selected' : ''}>اختر..</option>`;
+                        MENU_ITEMS.forEach(m => {
+                            // لو العنصر محفوظ وسعره اتغير في المنيو، يفضل محافظ على سعره القديم إلا لو اخترناه تاني
+                            options += `<option value="${m.price}" ${item.text === m.name ? 'selected' : ''}>${m.name}</option>`;
+                        });
+
                         row.innerHTML = `
-                            <input type="number" class="item-input i-qty" id="q-${itemId}" value="${qtyVal}" oninput="updItem('${userId}','${itemId}')">
-                            <input class="item-input i-name" id="n-${itemId}" placeholder="الطلب" oninput="updItem('${userId}','${itemId}')">
-                            <input type="number" class="item-input i-price" id="p-${itemId}" placeholder="سعر" oninput="updItem('${userId}','${itemId}')">
+                            <input type="number" class="item-input i-qty" id="q-${itemId}" value="${qtyVal}" oninput="updateRowCalc('${userId}','${itemId}')">
+                            
+                            <select class="item-input i-name" id="n-${itemId}" onchange="updateRowMenu('${userId}','${itemId}', this)">
+                                ${options}
+                            </select>
+
+                            <input type="number" class="item-input i-price" id="p-${itemId}" value="${priceVal}" readonly>
                             <div class="i-total" id="t-${itemId}">${lineTotal}</div>
                             <button class="i-remove" onclick="delItem('${userId}','${itemId}')">×</button>
                         `;
                         itemsContainer.appendChild(row);
                     }
                     
+                    // تحديث القيم فقط لو العنصر مش هو اللي عليه التركيز
                     const qInp = document.getElementById(`q-${itemId}`);
-                    const nInp = document.getElementById(`n-${itemId}`);
+                    const nInp = document.getElementById(`n-${itemId}`); // Select
                     const pInp = document.getElementById(`p-${itemId}`);
                     const tDiv = document.getElementById(`t-${itemId}`);
 
                     if(document.activeElement !== qInp) qInp.value = qtyVal;
-                    if(document.activeElement !== nInp) nInp.value = item.text || "";
-                    if(document.activeElement !== pInp) pInp.value = priceVal;
+                    // Select value update handled by HTML regeneration slightly, but to be safe:
+                    // We rely on the 'selected' attribute in innerHTML above for the text matching.
                     
-                    // تحديث المجموع الفرعي فورياً
+                    if(document.activeElement !== pInp) pInp.value = priceVal;
                     tDiv.innerText = lineTotal;
                 });
 
@@ -337,33 +368,80 @@
                 if(child.className === 'person-card' && !existingIds.has(child.id)) child.remove();
             });
 
-            const totalEl = document.getElementById("grand-total");
-            const currentDisplay = parseInt(totalEl.innerText);
-            if(currentDisplay !== grandTotal) totalEl.innerText = grandTotal;
+            animateValue("grand-total", parseInt(document.getElementById("grand-total").innerText), grandTotal, 500);
         }
 
-        // Firebase Functions (Updated for orders_v2)
-        const updName = (uid, val) => db.ref(`orders_v2/${uid}`).update({name: val});
-        const addNewUser = () => db.ref('orders_v2').push().set({name:"", items:{}});
-        const delUser = (uid) => confirm("حذف؟") ? db.ref(`orders_v2/${uid}`).remove() : null;
-        
-        // إضافة طلب جديد (العدد الافتراضي 1)
-        const addItem = (uid) => db.ref(`orders_v2/${uid}/items`).push().set({qty:1, text:"", price:""});
-        
-        const delItem = (uid, iid) => db.ref(`orders_v2/${uid}/items/${iid}`).remove();
-        
-        // تحديث البيانات (العدد - الاسم - السعر)
-        const updItem = (uid, iid) => {
-            const qty = document.getElementById(`q-${iid}`).value;
-            const text = document.getElementById(`n-${iid}`).value;
-            const price = document.getElementById(`p-${iid}`).value;
+        // --- دوال التحكم ---
+
+        // عند اختيار صنف من القائمة
+        function updateRowMenu(uid, iid, selectElem) {
+            const price = selectElem.value; // السعر جاي من الـ value
+            const text = selectElem.options[selectElem.selectedIndex].text; // الاسم
             
-            db.ref(`orders_v2/${uid}/items/${iid}`).update({
-                qty: Number(qty),
+            // نحدث قاعدة البيانات بالاسم والسعر الجديد
+            db.ref(`orders_v3/${uid}/items/${iid}`).update({
                 text: text,
                 price: Number(price)
             });
-        };
+        }
+
+        // عند تغيير الكمية (السعر ثابت)
+        function updateRowCalc(uid, iid) {
+            const qty = document.getElementById(`q-${iid}`).value;
+            db.ref(`orders_v3/${uid}/items/${iid}`).update({
+                qty: Number(qty)
+            });
+        }
+
+        // وظيفة التقرير (الجرد)
+        function showReport() {
+            if (!globalData) return alert("لا توجد مبيعات");
+
+            let report = {};
+            let totalCash = 0;
+
+            Object.values(globalData).forEach(user => {
+                if(user.items) {
+                    Object.values(user.items).forEach(item => {
+                        if(item.text) { // لو الصنف له اسم
+                            if(!report[item.text]) report[item.text] = 0;
+                            report[item.text] += Number(item.qty || 1);
+                            totalCash += (Number(item.qty||1) * Number(item.price||0));
+                        }
+                    });
+                }
+            });
+
+            // تنسيق الرسالة
+            let msg = "📊 تقرير المبيعات اليومي:\n\n";
+            Object.keys(report).forEach(itemName => {
+                msg += `▫️ ${itemName}: ${report[itemName]}\n`;
+            });
+            msg += "\n💰 إجمالي الإيراد: " + totalCash + " جنيه";
+
+            alert(msg);
+        }
+
+        // Firebase Basics
+        const updName = (uid, val) => db.ref(`orders_v3/${uid}`).update({name: val});
+        const addNewUser = () => db.ref('orders_v3').push().set({name:"", items:{}});
+        const delUser = (uid) => confirm("حذف العميل؟") ? db.ref(`orders_v3/${uid}`).remove() : null;
+        const addItem = (uid) => db.ref(`orders_v3/${uid}/items`).push().set({qty:1, text:"", price:0});
+        const delItem = (uid, iid) => db.ref(`orders_v3/${uid}/items/${iid}`).remove();
+
+        function animateValue(id, start, end, duration) {
+            if (start === end) return;
+            const obj = document.getElementById(id);
+            const range = end - start;
+            let current = start;
+            const increment = end > start ? 1 : -1;
+            const stepTime = Math.abs(Math.floor(duration / range));
+            const timer = setInterval(function() {
+                current += increment;
+                obj.innerText = current;
+                if (current == end) clearInterval(timer);
+            }, Math.max(stepTime, 10));
+        }
     </script>
 </body>
 </html>
