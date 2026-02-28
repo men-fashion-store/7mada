@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* --- الوضع النهاري --- */
             --bg-main: #fcf9f2;
             --card-bg: rgba(255, 255, 255, 0.95);
             --text-primary: #3e2723;
@@ -21,7 +20,6 @@
         }
 
         [data-theme="dark"] {
-            /* --- الوضع الليلي --- */
             --bg-main: #000000;
             --card-bg: rgba(18, 18, 18, 0.95);
             --text-primary: #ffffff;
@@ -55,8 +53,8 @@
         [data-theme="light"] body { --watermark-color: %233e2723; }
         [data-theme="dark"] body { --watermark-color: %23ffffff; }
 
-        /* --- زرار التحويل --- */
-        .theme-switch-wrapper { position: absolute; top: 20px; left: 20px; z-index: 100; }
+        /* --- الأزرار العلوية --- */
+        .top-controls { position: absolute; top: 20px; width: calc(100% - 40px); display: flex; justify-content: space-between; z-index: 100; }
         .theme-switch { display: inline-block; height: 30px; position: relative; width: 55px; }
         .theme-switch input { display:none; }
         .slider { background-color: var(--line-color); bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; border-radius: 34px; border: 1px solid var(--text-secondary); }
@@ -67,6 +65,9 @@
         .slider .moon { right: 7px; opacity: 0; color: #fff; }
         input:checked + .slider .sun { opacity: 0; }
         input:checked + .slider .moon { opacity: 1; }
+        
+        .logout-btn { background: transparent; border: 1px solid var(--line-color); color: var(--text-primary); padding: 5px 15px; border-radius: 20px; cursor: pointer; font-family: 'Cairo'; font-weight: bold; font-size: 14px; display: none; }
+        .logout-btn:hover { background: #ff5252; color: #fff; border-color: #ff5252; }
 
         /* --- الهيدر --- */
         .header-container { margin-top: 40px; margin-bottom: 30px; text-align: center; animation: fadeIn 1s ease; position: relative; z-index: 2; }
@@ -75,15 +76,34 @@
         .cup-icon { width: 45px; height: 45px; fill: var(--text-primary); }
         .logo-sub { font-size: 13px; font-weight: 700; color: var(--text-secondary); letter-spacing: 4px; margin-top: 5px; }
 
-        /* --- الكروت --- */
-        .notebook { width: 100%; max-width: 600px; position: relative; z-index: 2; }
-        .person-card {
+        /* --- واجهة تسجيل الدخول --- */
+        #auth-container { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 400px; margin-top: 50px; z-index: 10; }
+        .auth-card { background: var(--card-bg); border: 1px solid var(--line-color); border-radius: 12px; padding: 30px; width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; backdrop-filter: blur(5px); }
+        .auth-title { font-size: 24px; font-weight: 800; color: var(--text-primary); margin-bottom: 20px; }
+        .auth-input { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: 1px solid var(--line-color); background: var(--input-bg); color: var(--text-primary); font-family: 'Cairo'; font-size: 14px; outline: none; text-align: right; }
+        .auth-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--text-primary); color: var(--bg-main); font-family: 'Cairo'; font-size: 16px; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
+        .auth-error { color: #ff5252; font-size: 13px; margin-top: 10px; display: none; font-weight: bold; }
+
+        /* --- بروفايل المدير --- */
+        .admin-profile {
             background: var(--card-bg); border: 1px solid var(--line-color);
             border-radius: 12px; padding: 15px; margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: relative;
-            backdrop-filter: blur(5px);
-            animation: slideUp 0.4s ease-out;
+            display: flex; align-items: center; gap: 15px; width: 100%; max-width: 600px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); cursor: pointer;
+            backdrop-filter: blur(5px); animation: fadeIn 0.5s ease;
+            position: relative; z-index: 2;
         }
+        .admin-profile:hover { border-color: var(--accent-color); }
+        .admin-profile img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-color); }
+        .admin-info { flex-grow: 1; text-align: right; }
+        .admin-name { font-size: 18px; font-weight: 800; color: var(--text-primary); }
+        .admin-phone { font-size: 14px; color: var(--text-secondary); font-weight: 600; }
+        .edit-icon { font-size: 20px; opacity: 0.5; color: var(--text-primary); }
+
+        /* --- الكروت والطلبات --- */
+        #app-content { display: none; width: 100%; flex-direction: column; align-items: center; }
+        .notebook { width: 100%; max-width: 600px; position: relative; z-index: 2; }
+        .person-card { background: var(--card-bg); border: 1px solid var(--line-color); border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: relative; backdrop-filter: blur(5px); animation: slideUp 0.4s ease-out; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
@@ -92,89 +112,75 @@
         .delete-btn { background: none; border: 1px solid var(--line-color); color: var(--text-secondary); width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; }
         .delete-btn:hover { background: #ff5252; color: #fff; border-color: #ff5252; }
 
-        /* --- صفوف الطلبات --- */
         .item-row { display: flex; gap: 5px; margin-bottom: 8px; align-items: center; }
-        
-        /* تصميم الحقول */
-        .item-input {
-            border: 1px solid var(--line-color); background: var(--input-bg);
-            color: var(--text-primary); padding: 8px; border-radius: 6px;
-            font-family: 'Cairo'; font-size: 14px; outline: none; font-weight: 600; text-align: center;
-        }
-        
-        /* القائمة المنسدلة */
-        select.item-input {
-            appearance: none; -webkit-appearance: none;
-            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236d4c41%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-            background-repeat: no-repeat;
-            background-position: left 0.7rem top 50%;
-            background-size: 0.65rem auto;
-            padding-left: 20px;
-        }
+        .item-input { border: 1px solid var(--line-color); background: var(--input-bg); color: var(--text-primary); padding: 8px; border-radius: 6px; font-family: 'Cairo'; font-size: 14px; outline: none; font-weight: 600; text-align: center; }
+        select.item-input { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236d4c41%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: left 0.7rem top 50%; background-size: 0.65rem auto; padding-left: 20px; }
 
         .i-qty { width: 15%; font-weight: 800; }
         .i-name { width: 45%; text-align: right; padding-right: 10px; cursor: pointer; }
-        .i-price { width: 20%; background: rgba(0,0,0,0.03); } /* لون مختلف لأنه أوتوماتيك */
+        .i-price { width: 20%; background: rgba(0,0,0,0.03); } 
         .i-total { width: 15%; font-size: 14px; font-weight: 900; color: var(--price-color); text-align: center; }
-        
         .i-remove { background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 18px; width: 5%; }
         .i-remove:hover { color: #ff5252; }
 
         .card-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 10px; border-top: 1px dashed var(--line-color); }
-        .add-item-btn {
-            background: var(--text-primary); color: var(--bg-main); border: none;
-            padding: 8px 20px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; font-family: 'Cairo';
-        }
+        .add-item-btn { background: var(--text-primary); color: var(--bg-main); border: none; padding: 8px 20px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; font-family: 'Cairo'; }
         .card-total { font-size: 14px; color: var(--text-secondary); font-weight: 700; }
         .card-total span { color: var(--text-primary); font-size: 18px; font-weight: 900; }
 
-        /* --- الأزرار العائمة --- */
-        .fab-container {
-            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
-            display: flex; gap: 20px; z-index: 90;
-        }
-        .main-fab {
-            width: 60px; height: 60px; background: var(--text-primary); color: var(--bg-main);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); cursor: pointer;
-            border: 2px solid var(--bg-main); transition: transform 0.2s;
-        }
+        /* --- الأزرار العائمة والبار السفلي --- */
+        .fab-container { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); display: flex; gap: 20px; z-index: 90; }
+        .main-fab { width: 60px; height: 60px; background: var(--text-primary); color: var(--bg-main); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); cursor: pointer; border: 2px solid var(--bg-main); transition: transform 0.2s; }
         .main-fab:hover { transform: scale(1.1); }
-        
-        /* زرار التقرير */
         .report-fab { background: var(--accent-color); font-size: 24px; }
 
-        .total-bar {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: var(--text-primary); color: var(--bg-main);
-            width: 90%; max-width: 400px; padding: 15px 25px; border-radius: 50px;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 100;
-        }
+        .total-bar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--text-primary); color: var(--bg-main); width: 90%; max-width: 400px; padding: 15px 25px; border-radius: 50px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 100; }
         .total-val { font-size: 24px; font-weight: 900; }
-
     </style>
 </head>
 <body data-theme="light">
 
-    <div class="theme-switch-wrapper">
-       <label class="theme-switch">
-        <input type="checkbox" id="themeCheckbox" />
-        <div class="slider">
-            <span class="icon sun">☀</span>
-            <span class="icon moon">☾</span>
+    <div class="top-controls">
+        <div class="theme-switch-wrapper">
+           <label class="theme-switch">
+            <input type="checkbox" id="themeCheckbox" />
+            <div class="slider">
+                <span class="icon sun">☀</span>
+                <span class="icon moon">☾</span>
+            </div>
+          </label>
         </div>
-      </label>
+        <button id="logoutBtn" class="logout-btn" onclick="logoutUser()">تسجيل الخروج</button>
     </div>
 
-    <div id="app-content" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+    <div class="header-container">
+        <div class="logo-wrapper">
+            <svg class="cup-icon" viewBox="0 0 24 24"><path d="M18.5 3H6c-1.1 0-2 .9-2 2v5.71c0 3.83 2.95 7.18 6.78 7.29 3.96.12 7.22-3.06 7.22-7v-1h.5c1.93 0 3.5-1.57 3.5-3.5S20.43 3 18.5 3zM16 8.99c0 2.8-2.2 5.02-5 5.02s-5-2.21-5-5.02V5h10v3.99zM18.5 8h-.5V5h.5c.83 0 1.5.67 1.5 1.5S19.33 8 18.5 8z" /></svg>
+            <div class="main-logo-text">ROSSIA</div>
+        </div>
+        <div class="logo-sub">SMART MENU SYSTEM</div>
+    </div>
+
+    <div id="auth-container">
+        <div class="auth-card">
+            <div class="auth-title">لوحة المدير</div>
+            <input type="email" id="auth-email" class="auth-input" placeholder="البريد الإلكتروني">
+            <input type="password" id="auth-password" class="auth-input" placeholder="كلمة المرور">
+            <div id="auth-error" class="auth-error"></div>
+            <button class="auth-btn" onclick="loginUser()">دخول النظام</button>
+            <div style="font-size: 12px; color: var(--text-secondary); margin-top: 10px;">النظام مخصص للإدارة فقط</div>
+        </div>
+    </div>
+
+    <div id="app-content">
         
-        <div class="header-container">
-            <div class="logo-wrapper">
-                <svg class="cup-icon" viewBox="0 0 24 24"><path d="M18.5 3H6c-1.1 0-2 .9-2 2v5.71c0 3.83 2.95 7.18 6.78 7.29 3.96.12 7.22-3.06 7.22-7v-1h.5c1.93 0 3.5-1.57 3.5-3.5S20.43 3 18.5 3zM16 8.99c0 2.8-2.2 5.02-5 5.02s-5-2.21-5-5.02V5h10v3.99zM18.5 8h-.5V5h.5c.83 0 1.5.67 1.5 1.5S19.33 8 18.5 8z" /></svg>
-                <div class="main-logo-text">ROSSIA</div>
+        <div class="admin-profile" onclick="editProfile()" title="تعديل بياناتي">
+            <img id="admin-photo" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Admin">
+            <div class="admin-info">
+                <div id="admin-name" class="admin-name">أحمد الشيخ</div>
+                <div id="admin-phone" class="admin-phone">01000000000</div>
             </div>
-            <div class="logo-sub">SMART MENU SYSTEM</div>
+            <div class="edit-icon">✏️</div>
         </div>
 
         <div class="notebook">
@@ -196,35 +202,32 @@
                 <span style="font-size:12px; color:var(--accent-color);">EGP</span>
             </div>
         </div>
-
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
-        // ==========================================
-        // 🛠️ إعدادات المنيو (عدل هنا الأسعار والأسماء)
-        // ==========================================
         const MENU_ITEMS = [
             { name: "قهوة تركي", price: 20 },
             { name: "قهوة فرنساوي", price: 30 },
             { name: "إسبريسو", price: 30 },
             { name: "شاي", price: 10 },
-             { name: "ينسون", price: 10 },
-             { name: "نعناع", price: 10 },
-             { name: "كركديه", price: 10 },
-             { name: "كوفي ميكس", price: 20 },
-              { name: " كوفي ميكس باللبن", price: 30 },
+            { name: "ينسون", price: 10 },
+            { name: "نعناع", price: 10 },
+            { name: "كركديه", price: 10 },
+            { name: "كوفي ميكس", price: 20 },
+            { name: " كوفي ميكس باللبن", price: 30 },
             { name: "كبتشينو لاتيه", price: 25 },
             { name: "كبتشينو لاتيه باللبن", price: 30 },
             { name: "كولا", price: 20 },
             { name: "مياه معدنية", price: 10 },
             { name: " عصير بيتي", price: 15 },
-             { name: "عصير فواكه", price: 25 },
-             { name: "راني", price: 25 },
-             { name: "اندومي", price: 20 },
-             { name: "كوكتيل", price: 35 }
+            { name: "عصير فواكه", price: 25 },
+            { name: "راني", price: 25 },
+            { name: "اندومي", price: 20 },
+            { name: "كوكتيل", price: 30 }
         ]
 
         const firebaseConfig = {
@@ -238,10 +241,8 @@
             measurementId: "G-Y09FGPTZ1W"
         };
 
-        let db;
-        let globalData = {}; // لحفظ البيانات عشان التقرير
+        let db, auth, globalData = {}; 
 
-        // Theme Setup
         const toggleSwitch = document.getElementById('themeCheckbox');
         const currentTheme = localStorage.getItem('theme');
         if (currentTheme) {
@@ -255,16 +256,81 @@
         });
 
         window.onload = function() {
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-                db = firebase.database();
-                // استخدمنا orders_v3 للإصدار الجديد
-                db.ref('orders_v3').on('value', renderAll);
-            }
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            db = firebase.database();
+            auth = firebase.auth();
+
+            auth.onAuthStateChanged(function(user) {
+                if (user) {
+                    document.getElementById('auth-container').style.display = 'none';
+                    document.getElementById('app-content').style.display = 'flex';
+                    document.getElementById('logoutBtn').style.display = 'block';
+                    
+                    db.ref('orders_v3').on('value', renderAll);
+                    loadAdminProfile(); // تحميل بيانات المدير
+                } else {
+                    document.getElementById('auth-container').style.display = 'flex';
+                    document.getElementById('app-content').style.display = 'none';
+                    document.getElementById('logoutBtn').style.display = 'none';
+                    db.ref('orders_v3').off('value', renderAll);
+                }
+            });
         };
 
+        function loginUser() {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            const errorDiv = document.getElementById('auth-error');
+            errorDiv.style.display = 'none';
+
+            if(!email || !password) {
+                errorDiv.innerText = "أدخل البريد الإلكتروني وكلمة المرور!";
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            auth.signInWithEmailAndPassword(email, password)
+                .catch(function(error) {
+                    errorDiv.innerText = "بيانات الدخول غير صحيحة.";
+                    errorDiv.style.display = 'block';
+                });
+        }
+
+        function logoutUser() { auth.signOut(); }
+
+        // --- دوال بروفايل المدير ---
+        function loadAdminProfile() {
+            db.ref('admin_profile').on('value', snap => {
+                const data = snap.val();
+                if(data) {
+                    if(data.name) document.getElementById('admin-name').innerText = data.name;
+                    if(data.phone) document.getElementById('admin-phone').innerText = data.phone;
+                    if(data.photo) document.getElementById('admin-photo').src = data.photo;
+                }
+            });
+        }
+
+        function editProfile() {
+            const currentName = document.getElementById('admin-name').innerText;
+            const currentPhone = document.getElementById('admin-phone').innerText;
+            const currentPhoto = document.getElementById('admin-photo').src;
+
+            const newName = prompt("اكتب اسمك:", currentName) || currentName;
+            const newPhone = prompt("رقم التليفون:", currentPhone) || currentPhone;
+            const newPhoto = prompt("رابط صورتك (URL) لو عايز تغيرها:", currentPhoto) || currentPhoto;
+
+            db.ref('admin_profile').update({
+                name: newName,
+                phone: newPhone,
+                photo: newPhoto
+            }).then(() => {
+                alert("تم تحديث بياناتك بنجاح!");
+            });
+        }
+
+        // --- باقي دوال التطبيق الأصلية ---
         function renderAll(snapshot) {
-            globalData = snapshot.val() || {}; // تحديث البيانات العالمية
+            globalData = snapshot.val() || {}; 
             const container = document.getElementById('users-container');
             let grandTotal = 0;
 
@@ -313,7 +379,6 @@
                 
                 card.querySelector('.card-total span').innerText = userTotal;
 
-                // معالجة الصفوف
                 const itemsContainer = document.getElementById(`items-${userId}`);
                 const itemsData = user.items || {};
                 const currentItemIds = new Set();
@@ -331,20 +396,16 @@
                         row.id = `item-${itemId}`;
                         row.className = 'item-row';
                         
-                        // إنشاء خيارات القائمة
                         let options = `<option value="" disabled ${!item.text ? 'selected' : ''}>اختر..</option>`;
                         MENU_ITEMS.forEach(m => {
-                            // لو العنصر محفوظ وسعره اتغير في المنيو، يفضل محافظ على سعره القديم إلا لو اخترناه تاني
                             options += `<option value="${m.price}" ${item.text === m.name ? 'selected' : ''}>${m.name}</option>`;
                         });
 
                         row.innerHTML = `
                             <input type="number" class="item-input i-qty" id="q-${itemId}" value="${qtyVal}" oninput="updateRowCalc('${userId}','${itemId}')">
-                            
                             <select class="item-input i-name" id="n-${itemId}" onchange="updateRowMenu('${userId}','${itemId}', this)">
                                 ${options}
                             </select>
-
                             <input type="number" class="item-input i-price" id="p-${itemId}" value="${priceVal}" readonly>
                             <div class="i-total" id="t-${itemId}">${lineTotal}</div>
                             <button class="i-remove" onclick="delItem('${userId}','${itemId}')">×</button>
@@ -352,16 +413,12 @@
                         itemsContainer.appendChild(row);
                     }
                     
-                    // تحديث القيم فقط لو العنصر مش هو اللي عليه التركيز
                     const qInp = document.getElementById(`q-${itemId}`);
-                    const nInp = document.getElementById(`n-${itemId}`); // Select
+                    const nInp = document.getElementById(`n-${itemId}`); 
                     const pInp = document.getElementById(`p-${itemId}`);
                     const tDiv = document.getElementById(`t-${itemId}`);
 
                     if(document.activeElement !== qInp) qInp.value = qtyVal;
-                    // Select value update handled by HTML regeneration slightly, but to be safe:
-                    // We rely on the 'selected' attribute in innerHTML above for the text matching.
-                    
                     if(document.activeElement !== pInp) pInp.value = priceVal;
                     tDiv.innerText = lineTotal;
                 });
@@ -378,21 +435,15 @@
             animateValue("grand-total", parseInt(document.getElementById("grand-total").innerText), grandTotal, 500);
         }
 
-        // --- دوال التحكم ---
-
-        // عند اختيار صنف من القائمة
         function updateRowMenu(uid, iid, selectElem) {
-            const price = selectElem.value; // السعر جاي من الـ value
-            const text = selectElem.options[selectElem.selectedIndex].text; // الاسم
-            
-            // نحدث قاعدة البيانات بالاسم والسعر الجديد
+            const price = selectElem.value;
+            const text = selectElem.options[selectElem.selectedIndex].text;
             db.ref(`orders_v3/${uid}/items/${iid}`).update({
                 text: text,
                 price: Number(price)
             });
         }
 
-        // عند تغيير الكمية (السعر ثابت)
         function updateRowCalc(uid, iid) {
             const qty = document.getElementById(`q-${iid}`).value;
             db.ref(`orders_v3/${uid}/items/${iid}`).update({
@@ -400,9 +451,8 @@
             });
         }
 
-        // وظيفة التقرير (الجرد)
         function showReport() {
-            if (!globalData) return alert("لا توجد مبيعات");
+            if (!globalData || Object.keys(globalData).length === 0) return alert("لا توجد مبيعات");
 
             let report = {};
             let totalCash = 0;
@@ -410,7 +460,7 @@
             Object.values(globalData).forEach(user => {
                 if(user.items) {
                     Object.values(user.items).forEach(item => {
-                        if(item.text) { // لو الصنف له اسم
+                        if(item.text) { 
                             if(!report[item.text]) report[item.text] = 0;
                             report[item.text] += Number(item.qty || 1);
                             totalCash += (Number(item.qty||1) * Number(item.price||0));
@@ -419,7 +469,6 @@
                 }
             });
 
-            // تنسيق الرسالة
             let msg = "📊 تقرير المبيعات اليومي:\n\n";
             Object.keys(report).forEach(itemName => {
                 msg += `▫️ ${itemName}: ${report[itemName]}\n`;
@@ -429,7 +478,6 @@
             alert(msg);
         }
 
-        // Firebase Basics
         const updName = (uid, val) => db.ref(`orders_v3/${uid}`).update({name: val});
         const addNewUser = () => db.ref('orders_v3').push().set({name:"", items:{}});
         const delUser = (uid) => confirm("حذف العميل؟") ? db.ref(`orders_v3/${uid}`).remove() : null;
