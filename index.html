@@ -100,10 +100,37 @@
         .admin-phone { font-size: 14px; color: var(--text-secondary); font-weight: 600; }
         .edit-icon { font-size: 20px; opacity: 0.5; color: var(--text-primary); }
 
+        /* --- شريط البحث --- */
+        .search-container {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+        #search-input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 12px;
+            border: 1px solid var(--line-color);
+            background: var(--card-bg);
+            color: var(--text-primary);
+            font-family: 'Cairo';
+            font-size: 15px;
+            outline: none;
+            text-align: right;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            backdrop-filter: blur(5px);
+            transition: border-color 0.3s;
+        }
+        #search-input:focus {
+            border-color: var(--accent-color);
+        }
+
         /* --- الكروت والطلبات --- */
         #app-content { display: none; width: 100%; flex-direction: column; align-items: center; }
         .notebook { width: 100%; max-width: 600px; position: relative; z-index: 2; }
-        .person-card { background: var(--card-bg); border: 1px solid var(--line-color); border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: relative; backdrop-filter: blur(5px); animation: slideUp 0.4s ease-out; }
+        .person-card { background: var(--card-bg); border: 1px solid var(--line-color); border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: relative; backdrop-filter: blur(5px); animation: slideUp 0.4s ease-out; transition: display 0.3s ease; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
@@ -181,6 +208,10 @@
                 <div id="admin-phone" class="admin-phone">01000000000</div>
             </div>
             <div class="edit-icon">✏️</div>
+        </div>
+
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="🔍 ابحث عن اسم العميل..." oninput="filterUsers()">
         </div>
 
         <div class="notebook">
@@ -361,7 +392,7 @@
                     card.className = 'person-card';
                     card.innerHTML = `
                         <div class="card-header">
-                            <input type="text" id="name-${userId}" class="name-input" placeholder="اسم العميل.." oninput="updName('${userId}', this.value)">
+                            <input type="text" id="name-${userId}" class="name-input" placeholder="اسم العميل.." oninput="updName('${userId}', this.value); filterUsers()">
                             <button class="delete-btn" onclick="delUser('${userId}')">×</button>
                         </div>
                         <div id="items-${userId}"></div>
@@ -433,6 +464,9 @@
             });
 
             animateValue("grand-total", parseInt(document.getElementById("grand-total").innerText), grandTotal, 500);
+
+            // استدعاء دالة البحث هنا لضمان تطبيق الفلتر حتى لو حدث تحديث من الداتابيز
+            filterUsers();
         }
 
         function updateRowMenu(uid, iid, selectElem) {
@@ -479,7 +513,12 @@
         }
 
         const updName = (uid, val) => db.ref(`orders_v3/${uid}`).update({name: val});
-        const addNewUser = () => db.ref('orders_v3').push().set({name:"", items:{}});
+        const addNewUser = () => {
+            db.ref('orders_v3').push().set({name:"", items:{}});
+            // تصفير شريط البحث عند إضافة عميل جديد لضمان ظهوره
+            document.getElementById('search-input').value = "";
+            filterUsers();
+        };
         const delUser = (uid) => confirm("حذف العميل؟") ? db.ref(`orders_v3/${uid}`).remove() : null;
         const addItem = (uid) => db.ref(`orders_v3/${uid}/items`).push().set({qty:1, text:"", price:0});
         const delItem = (uid, iid) => db.ref(`orders_v3/${uid}/items/${iid}`).remove();
@@ -496,6 +535,23 @@
                 obj.innerText = current;
                 if (current == end) clearInterval(timer);
             }, Math.max(stepTime, 10));
+        }
+
+        // --- دالة البحث الجديدة ---
+        function filterUsers() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const cards = document.querySelectorAll('.person-card');
+            
+            cards.forEach(card => {
+                const nameInput = card.querySelector('.name-input');
+                const nameValue = nameInput ? nameInput.value.toLowerCase() : '';
+                
+                if (nameValue.includes(query)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         }
     </script>
 </body>
