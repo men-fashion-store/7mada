@@ -298,7 +298,7 @@
                     document.getElementById('logoutBtn').style.display = 'block';
                     
                     db.ref('orders_v3').on('value', renderAll);
-                    loadAdminProfile(); // تحميل بيانات المدير
+                    loadAdminProfile(); 
                 } else {
                     document.getElementById('auth-container').style.display = 'flex';
                     document.getElementById('app-content').style.display = 'none';
@@ -329,7 +329,6 @@
 
         function logoutUser() { auth.signOut(); }
 
-        // --- دوال بروفايل المدير ---
         function loadAdminProfile() {
             db.ref('admin_profile').on('value', snap => {
                 const data = snap.val();
@@ -359,7 +358,6 @@
             });
         }
 
-        // --- باقي دوال التطبيق الأصلية ---
         function renderAll(snapshot) {
             globalData = snapshot.val() || {}; 
             const container = document.getElementById('users-container');
@@ -397,7 +395,10 @@
                         </div>
                         <div id="items-${userId}"></div>
                         <div class="card-actions">
-                            <button class="add-item-btn" onclick="addItem('${userId}')">إضافة +</button>
+                            <div style="display:flex; gap: 5px;">
+                                <button class="add-item-btn" onclick="addItem('${userId}')">إضافة +</button>
+                                <button class="add-item-btn" style="background-color: var(--text-secondary);" onclick="addCustomItem('${userId}')">إضافة يدوي ✍️</button>
+                            </div>
                             <div class="card-total"><span>${userTotal}</span> ج.م</div>
                         </div>
                     `;
@@ -427,9 +428,18 @@
                         row.id = `item-${itemId}`;
                         row.className = 'item-row';
                         
+                        // فحص هل الصنف ده يدوي ولا من المنيو
+                        let isCustom = item.text && !MENU_ITEMS.find(m => m.name === item.text);
+                        
                         let options = `<option value="" disabled ${!item.text ? 'selected' : ''}>اختر..</option>`;
+                        
+                        // لو صنف يدوي هنضيفه كخيار مختار عشان يظهر اسمه صح
+                        if (isCustom) {
+                            options += `<option value="${priceVal}" selected>${item.text}</option>`;
+                        }
+
                         MENU_ITEMS.forEach(m => {
-                            options += `<option value="${m.price}" ${item.text === m.name ? 'selected' : ''}>${m.name}</option>`;
+                            options += `<option value="${m.price}" ${(!isCustom && item.text === m.name) ? 'selected' : ''}>${m.name}</option>`;
                         });
 
                         row.innerHTML = `
@@ -464,8 +474,6 @@
             });
 
             animateValue("grand-total", parseInt(document.getElementById("grand-total").innerText), grandTotal, 500);
-
-            // استدعاء دالة البحث هنا لضمان تطبيق الفلتر حتى لو حدث تحديث من الداتابيز
             filterUsers();
         }
 
@@ -513,14 +521,32 @@
         }
 
         const updName = (uid, val) => db.ref(`orders_v3/${uid}`).update({name: val});
+        
         const addNewUser = () => {
             db.ref('orders_v3').push().set({name:"", items:{}});
-            // تصفير شريط البحث عند إضافة عميل جديد لضمان ظهوره
             document.getElementById('search-input').value = "";
             filterUsers();
         };
+
         const delUser = (uid) => confirm("حذف العميل؟") ? db.ref(`orders_v3/${uid}`).remove() : null;
+        
         const addItem = (uid) => db.ref(`orders_v3/${uid}/items`).push().set({qty:1, text:"", price:0});
+        
+        // دالة إضافة الصنف اليدوي الجديدة
+        function addCustomItem(uid) {
+            const customName = prompt("📝 اكتب اسم الصنف الخارجي (مثال: شيبسي كبير):");
+            if (!customName || customName.trim() === "") return;
+            
+            const customPrice = prompt(`💰 اكتب سعر "${customName}":`);
+            if (!customPrice || isNaN(customPrice) || customPrice.trim() === "") return;
+
+            db.ref(`orders_v3/${uid}/items`).push().set({
+                qty: 1,
+                text: customName.trim(),
+                price: Number(customPrice)
+            });
+        }
+
         const delItem = (uid, iid) => db.ref(`orders_v3/${uid}/items/${iid}`).remove();
 
         function animateValue(id, start, end, duration) {
@@ -537,7 +563,6 @@
             }, Math.max(stepTime, 10));
         }
 
-        // --- دالة البحث الجديدة ---
         function filterUsers() {
             const query = document.getElementById('search-input').value.toLowerCase();
             const cards = document.querySelectorAll('.person-card');
