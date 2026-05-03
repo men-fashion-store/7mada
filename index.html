@@ -163,9 +163,25 @@
 
         .total-bar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--text-primary); color: var(--bg-main); width: 90%; max-width: 400px; padding: 15px 25px; border-radius: 50px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 100; }
         .total-val { font-size: 24px; font-weight: 900; }
+
+        /* --- نافذة الإضافة اليدوية --- */
+        #custom-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
     </style>
 </head>
 <body data-theme="light">
+
+    <div id="custom-modal">
+        <div class="auth-card" style="max-width: 350px;">
+            <h3 style="margin-top: 0; color: var(--text-primary);">📝 صنف خارجي</h3>
+            <input type="text" id="custom-name" class="auth-input" placeholder="اسم الصنف (مثال: شيبسي كبير)">
+            <input type="number" id="custom-price" class="auth-input" placeholder="السعر (مثال: 15)">
+            <div id="custom-error" class="auth-error" style="margin-bottom: 10px;"></div>
+            <div style="display: flex; gap: 10px;">
+                <button class="auth-btn" style="margin:0;" onclick="submitCustomItem()">إضافة للصنف</button>
+                <button class="auth-btn" style="margin:0; background: var(--text-secondary);" onclick="closeCustomModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
 
     <div class="top-controls">
         <div class="theme-switch-wrapper">
@@ -273,6 +289,7 @@
         };
 
         let db, auth, globalData = {}; 
+        let activeCustomUid = null; // تخزين الـ ID الخاص بالعميل للنافذة المنبثقة
 
         const toggleSwitch = document.getElementById('themeCheckbox');
         const currentTheme = localStorage.getItem('theme');
@@ -391,13 +408,13 @@
                     card.innerHTML = `
                         <div class="card-header">
                             <input type="text" id="name-${userId}" class="name-input" placeholder="اسم العميل.." oninput="updName('${userId}', this.value); filterUsers()">
-                            <button class="delete-btn" onclick="delUser('${userId}')">×</button>
+                            <button type="button" class="delete-btn" onclick="delUser('${userId}')">×</button>
                         </div>
                         <div id="items-${userId}"></div>
                         <div class="card-actions">
                             <div style="display:flex; gap: 5px;">
-                                <button class="add-item-btn" onclick="addItem('${userId}')">إضافة +</button>
-                                <button class="add-item-btn" style="background-color: var(--text-secondary);" onclick="addCustomItem('${userId}')">إضافة يدوي ✍️</button>
+                                <button type="button" class="add-item-btn" onclick="addItem('${userId}')">إضافة +</button>
+                                <button type="button" class="add-item-btn" style="background-color: var(--text-secondary);" onclick="openCustomModal('${userId}')">إضافة يدوي ✍️</button>
                             </div>
                             <div class="card-total"><span>${userTotal}</span> ج.م</div>
                         </div>
@@ -428,12 +445,9 @@
                         row.id = `item-${itemId}`;
                         row.className = 'item-row';
                         
-                        // فحص هل الصنف ده يدوي ولا من المنيو
                         let isCustom = item.text && !MENU_ITEMS.find(m => m.name === item.text);
-                        
                         let options = `<option value="" disabled ${!item.text ? 'selected' : ''}>اختر..</option>`;
                         
-                        // لو صنف يدوي هنضيفه كخيار مختار عشان يظهر اسمه صح
                         if (isCustom) {
                             options += `<option value="${priceVal}" selected>${item.text}</option>`;
                         }
@@ -449,13 +463,12 @@
                             </select>
                             <input type="number" class="item-input i-price" id="p-${itemId}" value="${priceVal}" readonly>
                             <div class="i-total" id="t-${itemId}">${lineTotal}</div>
-                            <button class="i-remove" onclick="delItem('${userId}','${itemId}')">×</button>
+                            <button type="button" class="i-remove" onclick="delItem('${userId}','${itemId}')">×</button>
                         `;
                         itemsContainer.appendChild(row);
                     }
                     
                     const qInp = document.getElementById(`q-${itemId}`);
-                    const nInp = document.getElementById(`n-${itemId}`); 
                     const pInp = document.getElementById(`p-${itemId}`);
                     const tDiv = document.getElementById(`t-${itemId}`);
 
@@ -529,25 +542,51 @@
         };
 
         const delUser = (uid) => confirm("حذف العميل؟") ? db.ref(`orders_v3/${uid}`).remove() : null;
-        
         const addItem = (uid) => db.ref(`orders_v3/${uid}/items`).push().set({qty:1, text:"", price:0});
-        
-        // دالة إضافة الصنف اليدوي الجديدة
-        function addCustomItem(uid) {
-            const customName = prompt("📝 اكتب اسم الصنف الخارجي (مثال: شيبسي كبير):");
-            if (!customName || customName.trim() === "") return;
-            
-            const customPrice = prompt(`💰 اكتب سعر "${customName}":`);
-            if (!customPrice || isNaN(customPrice) || customPrice.trim() === "") return;
+        const delItem = (uid, iid) => db.ref(`orders_v3/${uid}/items/${iid}`).remove();
 
-            db.ref(`orders_v3/${uid}/items`).push().set({
-                qty: 1,
-                text: customName.trim(),
-                price: Number(customPrice)
-            });
+        // ------------------ دوال النافذة المنبثقة الجديدة ------------------
+        function openCustomModal(uid) {
+            activeCustomUid = uid;
+            document.getElementById('custom-name').value = '';
+            document.getElementById('custom-price').value = '';
+            document.getElementById('custom-error').style.display = 'none';
+            document.getElementById('custom-modal').style.display = 'flex';
         }
 
-        const delItem = (uid, iid) => db.ref(`orders_v3/${uid}/items/${iid}`).remove();
+        function closeCustomModal() {
+            document.getElementById('custom-modal').style.display = 'none';
+            activeCustomUid = null;
+        }
+
+        function submitCustomItem() {
+            const nameInput = document.getElementById('custom-name').value.trim();
+            const priceInput = document.getElementById('custom-price').value;
+            const errorDiv = document.getElementById('custom-error');
+            
+            if (!nameInput) {
+                errorDiv.innerText = "اكتب اسم الصنف الأول!";
+                errorDiv.style.display = 'block';
+                return;
+            }
+            if (!priceInput || isNaN(priceInput)) {
+                errorDiv.innerText = "اكتب السعر بشكل صحيح (أرقام فقط)!";
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            db.ref(`orders_v3/${activeCustomUid}/items`).push().set({
+                qty: 1,
+                text: nameInput,
+                price: Number(priceInput)
+            }).then(() => {
+                closeCustomModal(); // إغلاق النافذة بنجاح
+            }).catch(err => {
+                errorDiv.innerText = "حدث خطأ في الاتصال!";
+                errorDiv.style.display = 'block';
+            });
+        }
+        // ------------------------------------------------------------------
 
         function animateValue(id, start, end, duration) {
             if (start === end) return;
